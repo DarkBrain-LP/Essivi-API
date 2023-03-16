@@ -1,3 +1,5 @@
+import datetime
+
 from src.extension import db
 
 
@@ -9,6 +11,7 @@ class Person(db.Model):
     phone = db.Column(db.Integer, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     quarter = db.Column(db.String(50), nullable=False)
+    added_date = db.Column(db.Date, default=datetime.datetime.today(), nullable=True)
     type = db.Column(db.String(20), nullable=True)
 
     __mapper_args__ = {
@@ -49,3 +52,16 @@ class Person(db.Model):
     @classmethod
     def get_by_phone(cls, phone):
         return cls.query.filter_by(phone=phone).first()
+
+    # get by id
+    @classmethod
+    def get_by_id(cls, id_):
+        return cls.query.filter_by(id=id_).first()
+
+    @classmethod
+    def check_exists(cls, phone):
+        return cls.query.filter_by(phone=phone).first() is not None
+
+    @classmethod
+    def check_exists_by_id(cls, id):
+        return cls.query.filter_by(id=id).first() is not None

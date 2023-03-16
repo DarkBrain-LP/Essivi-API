@@ -32,5 +32,36 @@ def login():
         'token': token
     }), 200
 
-    return jsonify({'message': 'invalid credentials',
-                    'WWW-Authenticate': 'Basic realm="Login required!"'}), 401
+
+# check if token is valid
+@auth_bp.route("/token/valid", methods=["POST"])
+def token():
+    token = request.headers.get('Authorization')
+    if token is None:
+        return jsonify({
+            'isValid': False,
+            'message': 'invalid token',
+            'WWW-Authenticate': 'Basic realm="Login required!"'
+        }), 401
+
+    try:
+        data = jwt.decode(token, SECRET_KEY)
+        #check if not expired
+        if data['exp'] < datetime.utcnow():
+            return jsonify({
+                'isValid': False,
+                'message': 'token expired',
+                'WWW-Authenticate': 'Basic realm="Login required!"'
+            }), 401
+
+        return jsonify({
+            'isValid': True,
+            'status': 'success',
+            'token': token
+        }), 200
+    except:
+        return jsonify({
+            'isValid': False,
+            'message': 'invalid token',
+            'WWW-Authenticate': 'Basic realm="Login required!"'
+        }), 401
