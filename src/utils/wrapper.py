@@ -20,4 +20,6 @@ def token_required(f):
 
         return f(current_user, *args, **kwargs)
 
+    # Renaming the function name:
+    # decorated.__name__ = f.__name__
     return decorated

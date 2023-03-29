@@ -6,7 +6,7 @@ class Category(db.Model, BaseModel):
     __tablename__ = "category"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=False)
-    is_active = db.Column(db.int, nullable=True, default=True)
+    is_active = db.Column(db.Integer, nullable=True, default=True)
 
     def __init__(self, name):
         self.name = name

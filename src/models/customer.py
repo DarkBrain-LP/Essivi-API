@@ -4,16 +4,15 @@ from src.models.person import Person
 
 class Customer(Person):
     __tablename__ = 'customer'
-    id = db.Column(db.Integer, db.ForeignKey("personne.id"), primary_key=True)
-    added_by = db.Column(db.Integer, db.ForeignKey("personne.id"), nullable=True)
-    delivery_points = db.relationship('DeliveryPoint', backref='customer')
+    id = db.Column(db.Integer, db.ForeignKey("person.id"), primary_key=True)
+    # added_by = db.Column(db.Integer, db.ForeignKey("person.id"), nullable=True)
+    delivery_points = db.relationship('DeliveryPoint', backref='customerEntity')
 
     __mapper_args__ = {
         "polymorphic_identity": "customer"
     }
 
-    def __init__(self, name: object, firstname: object, phone: object, password: object, quarter: object,
-                 added_by: object) -> object:
+    def __init__(self, name, firstname, phone, password, quarter, added_by):
         super().__init__(name, firstname, phone, password, quarter)
         self.added_by = added_by
 

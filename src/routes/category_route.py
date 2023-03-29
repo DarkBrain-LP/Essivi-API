@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 
+from src import db
 from src.models.category import Category
 from src.models.subcategory import SubCategory
 from src.routes.customer_route import customer_bp
@@ -20,6 +21,8 @@ def create(current_user):
 
         if not Category.check_if_exist(name):
             category = Category(name=name)
+            db.session.add(category)
+            db.session.commit()
             return jsonify({
                 "success": True,
                 "id": category.id,
@@ -41,7 +44,7 @@ def create(current_user):
 
 @customer_bp.route('/<int:id>/subcategory', methods=['POST'])
 @token_required
-def create(current_user, id: int):
+def addSubcategory(current_user, id: int):
     auth = request.authorization
     current_user_phone = auth.get('username')
 
@@ -54,6 +57,7 @@ def create(current_user, id: int):
 
             if not SubCategory.check_if_exist(id, name):
                 scategory = SubCategory(name=name, category_id=id)
+                db.session.add(scategory)
                 return jsonify({
                     "success": True,
                     "id": scategory.id,
@@ -83,7 +87,7 @@ def create(current_user, id: int):
 
 @customer_bp.route('/<int:id>/updateState/<int:state>', methods=['GET'])
 @token_required
-def create(current_user, id: int, state: int):
+def update(current_user, id: int, state: int):
     """
 
     :param id: the category id
