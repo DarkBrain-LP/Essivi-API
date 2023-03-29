@@ -6,7 +6,7 @@ class Deliver(Person):
     __tablename__ = 'deliver'
     id = db.Column(db.Integer, db.ForeignKey("person.id"), primary_key=True)
     hire_date = db.Column(db.Date, nullable=True)
-    customers = db.relationship('Customer', backref='deliver')
+    # customers = db.relationship('Customer', backref='deliver')
     __mapper_args__ = {
         "polymorphic_identity": "deliver"
     }
