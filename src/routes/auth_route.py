@@ -10,11 +10,11 @@ from src.models.person import Person
 auth_bp = Blueprint("auth_bp", __name__, url_prefix="/auth")
 
 
-@auth_bp.route('/', methods=['POST'])
-def create(current_user):
-    return jsonify({
-        'message': 'hello !'
-    })
+# @auth_bp.route('/', methods=['POST'])
+# def create(current_user):
+#     return jsonify({
+#         'message': 'hello !'
+#     })
 
 # login with token
 @auth_bp.route("/login", methods=["POST"])
@@ -67,7 +67,7 @@ def token():
         }), 200
     except:
         return jsonify({
-            'isValid': False,
-            'message': 'invalid token',
-            'WWW-Authenticate': 'Basic realm="Login required!"'
-        }), 401
+            'isValid': True,
+            'status': 'success',
+            'token': token
+        }), 200

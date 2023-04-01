@@ -10,6 +10,7 @@ from src.utils.wrapper import token_required
 
 deliver_bp = Blueprint("deliver_bp", __name__, url_prefix='/deliver')
 
+
 @deliver_bp.route('/', methods=['POST'])
 @token_required
 def create(current_user):
@@ -27,7 +28,8 @@ def create(current_user):
 
         # hash password
         password = generate_password_hash(password)
-        deliver = Deliver(name=name, firstname=fname, phone=phone, password=password, quarter=quarter, hire_date=hire_date)
+        deliver = Deliver(name=name, firstname=fname, phone=phone, password=password, quarter=quarter,
+                          hire_date=hire_date)
         if deliver is None:
             return jsonify({
                 "success": False,
@@ -53,3 +55,12 @@ def create(current_user):
             "message": str(e) + "Bad Request"
         }, 400)
 
+
+@deliver_bp.route('/')
+@token_required
+def get_all():
+    delivers = [deliv.format() for deliv in Deliver.query.all()]
+    return jsonify({
+        "success": True,
+        "result": delivers
+    })

@@ -42,6 +42,43 @@ def create(current_user):
         }, 400)
 
 
+# get all categories
+@customer_bp.route('/all')
+@token_required
+def all(current_user):
+    return jsonify({
+        "message": "succes"
+    })
+
+
+# get all categories
+@customer_bp.route('/')
+@token_required
+def get_categories(current_user):
+    # auth = request.authorization
+    # current_user_phone = auth.get('username')
+
+    try:
+        categories = Category.query.all()
+        if categories is None:
+            return jsonify({
+                "success": False,
+                "message": "Aucune catégorie trouvée",
+                "code": 404
+            }, 404)
+        else:
+            categories = [category.serialize() for category in categories]
+            return jsonify({
+                "success": True,
+                "categories": categories,
+                "code": 200
+            }, 200)
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": "Une erreur s'est produite"
+        }, 400)
+
 @customer_bp.route('/<int:id>/subcategory', methods=['POST'])
 @token_required
 def addSubcategory(current_user, id: int):

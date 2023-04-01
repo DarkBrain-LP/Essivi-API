@@ -8,6 +8,8 @@ class SubCategory(db.Model, BaseModel):
     name = db.Column(db.String(30), nullable=False)
     category = db.Column(db.Integer, db.ForeignKey("category.id"), nullable=False)
     is_active = db.Column(db.Boolean, nullable=True, default=True)
+    # get the category_name from category table name
+    category_name = db.relationship("Category", backref="subcategory", lazy=True)
 
     def __init__(self, name, category_id):
         self.name = name
@@ -17,7 +19,8 @@ class SubCategory(db.Model, BaseModel):
         return {
             "id": self.id,
             "name": self.name,
-            "category": self.category
+            "category": self.category,
+            "category_name": self.category_name.name
         }
 
     @classmethod

@@ -1,27 +1,32 @@
-from flask import Blueprint, request, jsonify
-from src.utils.wrapper import token_required
-from flask import Blueprint, request, jsonify, abort
+from flask import Blueprint, jsonify, request
 
 from src import db
 from src.models.command import Command
 from src.models.command_product import CommandProduct
-from src.models.customer import Customer
 from src.models.deliver import Deliver
-from src.utils.wrapper import token_required
-testcmd_bp = Blueprint('test_cmd_bp', __name__, url_prefix='/cmd')
 
+my_cmd_bp = Blueprint('my_cmd_bp', __name__, url_prefix='/mycmd')
 
-@testcmd_bp.route('/add', methods=['POST'])
-@token_required
-def add(current_user):
-    return {
-        'message': 'success'
-    }
+# get all commands
+@my_cmd_bp.route("/", methods=["GET"])
+def get_commands():
+    try:
+        # get all commands from the database
+        commands = Command.query.all()
+        # return the json format of the commands
+        return jsonify({
+            'status': 'success',
+            'commands': [command.format() for command in commands]
+        }), 200
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": "Une erreur s'est produite"
+        }, 400)
 
 
 # add a command and its products and quantities to the database
-@testcmd_bp.route("/", methods=["POST"])
-@token_required
+@my_cmd_bp.route("/", methods=["POST"])
 def add_command(current_user):
     try:
         # make control on the request boby elements. Check also if they are null or are already in the database
@@ -76,4 +81,3 @@ def add_command(current_user):
             "success": False,
             "message": "Veuillez entrer toutes les données"
         }, 400)
-

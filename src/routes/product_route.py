@@ -6,6 +6,25 @@ from src.utils.wrapper import token_required
 
 product_bp = Blueprint("product_bp", __name__, url_prefix="/product")
 
+@customer_bp.route('/', methods=['GET'])
+@token_required
+def get_all(current_user):
+    # auth = request.authorization
+    # current_user_phone = auth.get('username')
+
+    try:
+        products = Product.get_all()
+        return jsonify({
+            "success": True,
+            "products": [product.serialize() for product in products],
+            "code": 200
+        }, 200)
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": "Une erreur s'est produite"
+        }, 400)
+
 @customer_bp.route('/', methods=['POST'])
 @token_required
 def create(current_user):

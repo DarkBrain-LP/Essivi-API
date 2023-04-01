@@ -12,6 +12,8 @@ class Product(db.Model, BaseModel):
     price = db.Column(db.Float, nullable=False)
     number = db.Column(db.Integer, nullable=True)
     category = db.Column(db.Integer, db.ForeignKey("subcategory.id"), nullable=False)
+    # get the category_name from subcategory table name
+    category_name = db.relationship("SubCategory", backref="product", lazy=True)
 
     def __init__(self, name, volume_litter, price, number, category):
         self.name = name
@@ -36,5 +38,6 @@ class Product(db.Model, BaseModel):
             "volumeLitter": self.volume_litter,
             "price": self.price,
             "number": self.number,
-            "category": self.category
+            "category": self.category,
+            "category_name": "" + str(self.category_name.category_name.name) + "-" + str(self.category_name.name) # self.category_name.name
         }

@@ -7,14 +7,15 @@ class Category(db.Model, BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=False)
     is_active = db.Column(db.Integer, nullable=True, default=True)
-
+    subCategories = db.relationship("SubCategory", lazy=True)
     def __init__(self, name):
         self.name = name
 
     def format(self):
         return {
             "id": self.id,
-            "name": self.name
+            "name": self.name,
+            "subCategories": [subcat.format() for subcat in self.subCategories]
         }
 
     @classmethod
